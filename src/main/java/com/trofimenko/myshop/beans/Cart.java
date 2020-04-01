@@ -2,11 +2,13 @@ package com.trofimenko.myshop.beans;
 
 import com.trofimenko.myshop.persistence.entities.CartRecord;
 import com.trofimenko.myshop.persistence.entities.Product;
+import com.trofimenko.myshop.services.soap.PaymentService;
 import lombok.Data;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
+import ru.geekbrains.paymentservice.Payment;
 
 import javax.annotation.PostConstruct;
 import java.io.Serializable;
@@ -18,15 +20,19 @@ import java.util.UUID;
 @Component
 @Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class Cart implements Serializable {
+    private final PaymentService paymentService;
 
     private static final long serialVersionUID = 1L;
 
     private List<CartRecord> cartRecords;
+    private List<Payment> payments;
     private Double price;
+    private Payment payment;
 
     @PostConstruct
     public void init() {
         cartRecords = new ArrayList<>();
+        payments = paymentService.getPayments("Russia");
     }
 
     public void clear() {

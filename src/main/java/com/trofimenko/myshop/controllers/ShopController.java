@@ -6,15 +6,14 @@ import com.trofimenko.myshop.services.ProductService;
 import com.trofimenko.myshop.services.ReviewService;
 import com.trofimenko.myshop.services.ShopuserService;
 import com.trofimenko.myshop.utils.CaptchaGenerator;
+import com.trofimenko.myshop.utils.Validators;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import ru.geekbrains.paymentservice.Payment;
 
 
 import javax.imageio.ImageIO;
@@ -87,6 +86,27 @@ public class ShopController {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             ImageIO.write(bufferedImage,"png",byteArrayOutputStream);
             return byteArrayOutputStream.toByteArray();
+    }
+
+
+    /*
+    в корзине покупок выбираем платежную систему
+    этот метод устанавливает в корзину выбранную платежную систему
+    коммисия из этой системы покупок приплюсуется в общей стоитмсти
+    в итоге вернется страница checkout
+     */
+    @PostMapping("/checkout")
+    public String proseedToCheckout(String paymentId,Model model){
+
+        Payment payment = cart.getPayments()
+                .stream()
+                .filter(s -> s.getId() == Integer.valueOf(paymentId))
+                .collect(Validators.toSingleton());
+
+        cart.setPayment(payment);
+
+        model.addAttribute("cart",cart);
+        return "checkout";
     }
 
 
