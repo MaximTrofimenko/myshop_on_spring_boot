@@ -20,6 +20,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="id" type="{http://www.w3.org/2001/XMLSchema}int"/&gt;
  *         &lt;element name="name" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
  *         &lt;element name="country" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;element name="fee" type="{http://www.w3.org/2001/XMLSchema}int"/&gt;
  *       &lt;/sequence&gt;
  *     &lt;/restriction&gt;
  *   &lt;/complexContent&gt;
@@ -32,7 +33,8 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "payment", propOrder = {
     "id",
     "name",
-    "country"
+    "country",
+    "fee"
 })
 public class Payment {
 
@@ -41,6 +43,7 @@ public class Payment {
     protected String name;
     @XmlElement(required = true)
     protected String country;
+    protected int fee;
 
     /**
      * Gets the value of the id property.
@@ -104,6 +107,22 @@ public class Payment {
      */
     public void setCountry(String value) {
         this.country = value;
+    }
+
+    /**
+     * Gets the value of the fee property.
+     * 
+     */
+    public int getFee() {
+        return fee;
+    }
+
+    /**
+     * Sets the value of the fee property.
+     * 
+     */
+    public void setFee(int value) {
+        this.fee = value;
     }
 
 }
