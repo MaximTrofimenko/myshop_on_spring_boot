@@ -28,6 +28,6 @@ files:
 
 supershop:
   rabbitmq:
-    exchange:   super-shop.exchange
-    routingkey: super.shop
-    queue:      super-shop.queue
+    exchange:   myshop.exchange
+    routingkey: my.shop
+    queue:      myshop.queue
