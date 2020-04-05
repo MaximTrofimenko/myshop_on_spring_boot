@@ -26,7 +26,7 @@ files:
     icons:  "C:\\myshop\\icons"
     images: "C:\\myshop\\images"
 
-supershop:
+myshop:
   rabbitmq:
     exchange:   myshop.exchange
     routingkey: my.shop
