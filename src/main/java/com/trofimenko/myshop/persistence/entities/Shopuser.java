@@ -27,7 +27,7 @@ public class Shopuser extends PersistableEntity {
     private String email;
 
 
-    @ManyToMany(fetch=FetchType.LAZY)
+    @ManyToMany(fetch=FetchType.EAGER)
     @JoinTable(name = "shopuser_role",
             joinColumns = @JoinColumn(name = "shopuser"),
             inverseJoinColumns = @JoinColumn(name = "role"))

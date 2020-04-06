@@ -32,6 +32,7 @@ public class RabbitMQConfig {
         return new Queue(QUEUE, true, false, false);
     }
 
+    //связывает exchange и queue
     @Bean
     Binding binding() {
         return BindingBuilder.bind(queue()).to(exchange()).with(ROUTING_KEY);

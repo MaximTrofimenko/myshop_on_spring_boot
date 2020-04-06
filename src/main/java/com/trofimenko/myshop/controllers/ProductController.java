@@ -10,6 +10,7 @@ import com.trofimenko.myshop.services.ProductService;
 import com.trofimenko.myshop.services.ReviewService;
 import com.trofimenko.myshop.services.ShopuserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,6 +31,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @RequestMapping("/products")
 public class ProductController {
+
+    private final AmqpTemplate amqpTemplate;
     private final ImageService imageService;
     private final ProductService productService;
     private final ReviewService reviewService;
@@ -86,6 +89,11 @@ public class ProductController {
                     .shopuser(shopuser)
                     .approved(shopuser.getRoles().stream().anyMatch(x -> x.getName().equals("ROLE_ADMIN")))
                     .build();
+
+            /*
+            отправляем сообщение для RabbitMQ в тот момент когда оставляем отзыв о товаре
+             */
+            amqpTemplate.convertAndSend("myshop.exchange","my.shop","User " + shopuser.getPhone() + "has left the review!");
 
             reviewService.save(review);
 
