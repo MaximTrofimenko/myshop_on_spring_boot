@@ -5,6 +5,7 @@ import com.trofimenko.myshop.persistence.entities.Shopuser;
 import com.trofimenko.myshop.persistence.repositories.RoleRepository;
 import com.trofimenko.myshop.persistence.repositories.ShopuserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -56,5 +57,10 @@ public class ShopuserService implements UserDetailsService {
 
     public boolean isUserExist(String phone) {
         return shopuserRepository.existsByPhone(phone);
+    }
+
+    @RabbitListener(queues = "myshop.queue")
+    public void getMessage(String message){
+        System.out.println(message);
     }
 }
