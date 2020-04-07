@@ -39,6 +39,7 @@ public class ShopController {
 
     @GetMapping(value = "/", produces = MediaType.TEXT_HTML_VALUE)
     public String index(Model model, @RequestParam(required = false) Integer category) {
+        model.addAttribute("city",cityName);
         model.addAttribute("cart", cart.getCartRecords());
         model.addAttribute("products", productService.findAll(category));
         return "index";
