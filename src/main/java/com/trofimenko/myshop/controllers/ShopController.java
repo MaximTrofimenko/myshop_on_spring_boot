@@ -9,6 +9,7 @@ import com.trofimenko.myshop.utils.CaptchaGenerator;
 import com.trofimenko.myshop.utils.Validators;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,6 +27,9 @@ import java.security.Principal;
 @Controller
 @RequiredArgsConstructor
 public class ShopController {
+
+    @Value("${supershop.city}")
+    private String cityName;
 
     private final Cart cart;
     private final ProductService productService;
