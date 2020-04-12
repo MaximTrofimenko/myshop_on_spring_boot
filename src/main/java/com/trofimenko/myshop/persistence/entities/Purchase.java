@@ -1,13 +1,17 @@
 package com.trofimenko.myshop.persistence.entities;
 
 import com.trofimenko.myshop.persistence.entities.utils.PersistableEntity;
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Data
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class Purchase extends PersistableEntity {
     private Double price;
     private String address;

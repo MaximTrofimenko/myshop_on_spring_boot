@@ -126,7 +126,7 @@ public class ShopController {
                 )
                 .price(cart.getPrice() + cart.getPayment().getFee())
                 .phone(phone)
-                .email(email)
+                .address(email)
                 .build();
 
         model.addAttribute("purchase", purchaseService.makePurchase(purchase));
