@@ -5,6 +5,7 @@ import com.trofimenko.myshop.persistence.entities.CartRecord;
 import com.trofimenko.myshop.persistence.entities.Purchase;
 import com.trofimenko.myshop.persistence.entities.Shopuser;
 import com.trofimenko.myshop.services.ProductService;
+import com.trofimenko.myshop.services.PurchaseService;
 import com.trofimenko.myshop.services.ReviewService;
 import com.trofimenko.myshop.services.ShopuserService;
 import com.trofimenko.myshop.utils.CaptchaGenerator;
@@ -35,6 +36,7 @@ public class ShopController {
     private final ShopuserService shopuserService;
     private final CaptchaGenerator captchaGenerator;
     private final ReviewService reviewService;
+    private final PurchaseService purchaseService;
 
     @GetMapping(value = "/", produces = MediaType.TEXT_HTML_VALUE)
     public String index(Model model, @RequestParam(required = false) Integer category) {
