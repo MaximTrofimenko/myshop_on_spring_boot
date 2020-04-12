@@ -1,6 +1,8 @@
 package com.trofimenko.myshop.controllers;
 
 import com.trofimenko.myshop.beans.Cart;
+import com.trofimenko.myshop.persistence.entities.CartRecord;
+import com.trofimenko.myshop.persistence.entities.Purchase;
 import com.trofimenko.myshop.persistence.entities.Shopuser;
 import com.trofimenko.myshop.services.ProductService;
 import com.trofimenko.myshop.services.ReviewService;
@@ -22,6 +24,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.Principal;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -107,6 +110,29 @@ public class ShopController {
 
         model.addAttribute("cart",cart);
         return "checkout";
+    }
+
+    @PostMapping("/purchase")
+    public String finishOrderAndPay(String phone, String email, Principal principal, Model model) {
+
+        Shopuser shopuser = shopuserService.findByPhone(principal.getName());
+
+        Purchase purchase = Purchase.builder()
+                .shopuser(shopuser)
+                .products(cart.getCartRecords()
+                        .stream()
+                        .map(CartRecord::getProduct)
+                        .collect(Collectors.toList())
+                )
+                .price(cart.getPrice() + cart.getPayment().getFee())
+                .phone(phone)
+                .email(email)
+                .build();
+
+        model.addAttribute("purchase", purchaseService.makePurchase(purchase));
+
+        return "orderdone";
+
     }
 
 
