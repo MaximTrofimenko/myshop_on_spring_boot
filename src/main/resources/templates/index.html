@@ -4,49 +4,13 @@
       xmlns:sec="http://www.w3.org/1999/xhtml" lang="EN">
 <head>
     <meta charset="utf-8"/>
-    <title>SuperShop</title>
+    <title>Super Shop</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
 </head>
 <body>
 <div class="container">
-
-    <div style="text-align: center;">
-        <h1>My Shop</h1>
-    </div>
-
-    <hr>
-
-    <div class="container" sec:authorize="isAuthenticated()">
-        <div class="row">
-            <div class="col-sm">
-                <a class="nav-link" th:href="@{/profile}" th:text="Profile">PROFILE</a>
-            </div>
-            <div class="col-sm">
-                <form th:action="@{/logout}" method="POST" class="form-inline">
-                    <button id="navLogout" class="btn btn-outline-secondary" type="submit"  th:text="logout"></button>
-                </form>
-            </div>
-            <div class="col-sm">
-                <a class="nav-link" th:href="@{/cart}" th:text="CART + '(' + ${cart.size() + ')'}">CART</a>
-            </div>
-        </div>
-    </div>
-
-    <div class="container" sec:authorize="isAnonymous()">
-        <form th:action="@{/authenticateTheUser}" method="POST" class="form-inline">
-            <div class="row" style="margin-left: auto;margin-right: auto;">
-                <div class="col-sm">
-                    <input type="text" name="username" placeholder="username" class="form-control">
-                </div>
-                <div class="col-sm">
-                    <input type="password" name="password" placeholder="password" class="form-control">
-                </div>
-                <div class="col-sm">
-                    <button type="submit" class="btn btn-success">вход</button>
-                </div>
-            </div>
-        </form>
-    </div>
+    <br>
+    <div th:replace="~{navigation :: navigation(Home)}" />
     <br>
     <table class="table table-hover">
         <thead class="thead-dark">
@@ -57,6 +21,7 @@
             <th>Описание</th>
             <th>Цена</th>
             <th>Дата добавления</th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -89,26 +54,53 @@
 
     <hr>
 
-    <div class="row">
-        <div class="col-sm">
-            Категория продуктов:
-            <form th:action="@{/}" method="get">
+    <form th:action="@{/}" method="get" class="col-12">
+        <div class="row">
+            <div class="col-4">
                 <label>
-                    <select name="category">
-                        <option th:text="'Не выбрано'" th:value="null"></option>
-                        <option th:each="category : ${T(com.trofimenko.myshop.persistence.entities.enums.ProductCategory).values()}"
-                                th:value="${category.ordinal()}"
-                                th:text="${category.name}">
-                        </option>
-                    </select>
+                    Категория: <select name="category">
+                    <option th:text="'Не выбрано'" th:value="null"></option>
+                    <!--suppress ThymeleafVariablesResolveInspection -->
+                    <option th:each="category : ${T(com.trofimenko.myshop.persistence.entities.enums.ProductCategory).values()}"
+                            th:value="${category.ordinal()}"
+                            th:text="${category.name}">
+                    </option>
+                </select>
                 </label>
-                <button type="submit">применить</button>
-            </form>
+            </div>
+            <div class="col-2">
+                <label>
+                    <div class="row form-inline">
+                        <label for="minPrice" class="col-1 col-form-label">от: </label>
+                        <input type="number" class="form-control col" placeholder="0" min="0" max="5000" name="minPrice" id="minPrice">
+                    </div>
+                </label>
+            </div>
+            <div class="col-2">
+                <label>
+                    <div class="row form-inline">
+                        <label for="minPrice" class="col-1 col-form-label">до: </label>
+                        <input type="number" class="form-control col" placeholder="5000" min="0" max="5000" name="maxPrice" id="maxPrice">
+                    </div>
+                </label>
+            </div>
+            <div class="col-2">
+                <label>
+                    <div class="form-group">
+                        <input type="checkbox" class="form-check-input" name="notAvailable" id="available">
+                        <label class="form-check-label" for="available">отсутствующие товары</label>
+                    </div>
+                </label>
+            </div>
+            <div class="col-2">
+                <label>
+                    <div class="form-group">
+                        <button class="btn btn-primary" type="submit">применить</button>
+                    </div>
+                </label>
+            </div>
         </div>
-        <div class="col-sm">
-            <a sec:authorize="hasRole('ADMIN')" class="nav-link" th:href="@{/admin}" th:text="admin">ADMIN</a>
-        </div>
-    </div>
+    </form>
 
 </div>
 </body>
