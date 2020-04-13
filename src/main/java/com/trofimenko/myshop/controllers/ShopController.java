@@ -1,8 +1,11 @@
 package com.trofimenko.myshop.controllers;
 
 import com.trofimenko.myshop.beans.Cart;
+import com.trofimenko.myshop.persistence.entities.CartRecord;
+import com.trofimenko.myshop.persistence.entities.Purchase;
 import com.trofimenko.myshop.persistence.entities.Shopuser;
 import com.trofimenko.myshop.services.ProductService;
+import com.trofimenko.myshop.services.PurchaseService;
 import com.trofimenko.myshop.services.ReviewService;
 import com.trofimenko.myshop.services.ShopuserService;
 import com.trofimenko.myshop.utils.CaptchaGenerator;
@@ -22,6 +25,8 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -32,6 +37,7 @@ public class ShopController {
     private final ShopuserService shopuserService;
     private final CaptchaGenerator captchaGenerator;
     private final ReviewService reviewService;
+    private final PurchaseService purchaseService;
 
     @GetMapping(value = "/", produces = MediaType.TEXT_HTML_VALUE)
     public String index(Model model, @RequestParam(required = false) Integer category) {
@@ -73,7 +79,7 @@ public class ShopController {
         Shopuser shopuser = shopuserService.findByPhone(principal.getName());
 
         model.addAttribute("shopuser", shopuser);
-        model.addAttribute("reviews",reviewService.getReviewsByShopuser(shopuser));
+        model.addAttribute("reviews", reviewService.getReviewsByShopuser(shopuser).orElse(new ArrayList<>()));
 
         return "profile";
     }
@@ -107,6 +113,29 @@ public class ShopController {
 
         model.addAttribute("cart",cart);
         return "checkout";
+    }
+
+    @PostMapping("/purchase")
+    public String finishOrderAndPay(String phone, String email, Principal principal, Model model) {
+
+        Shopuser shopuser = shopuserService.findByPhone(principal.getName());
+
+        Purchase purchase = Purchase.builder()
+                .shopuser(shopuser)
+                .products(cart.getCartRecords()
+                        .stream()
+                        .map(CartRecord::getProduct)
+                        .collect(Collectors.toList())
+                )
+                .price(cart.getPrice() + cart.getPayment().getFee())
+                .phone(phone)
+                .address(email)
+                .build();
+
+        model.addAttribute("purchase", purchaseService.makePurchase(purchase));
+
+        return "orderdone";
+
     }
 
 
