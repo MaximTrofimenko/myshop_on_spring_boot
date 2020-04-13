@@ -25,6 +25,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 @Controller
@@ -78,7 +79,7 @@ public class ShopController {
         Shopuser shopuser = shopuserService.findByPhone(principal.getName());
 
         model.addAttribute("shopuser", shopuser);
-        model.addAttribute("reviews",reviewService.getReviewsByShopuser(shopuser));
+        model.addAttribute("reviews", reviewService.getReviewsByShopuser(shopuser).orElse(new ArrayList<>()));
 
         return "profile";
     }
